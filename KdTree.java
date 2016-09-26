@@ -4,21 +4,32 @@ package P3;
  *************************************************************************/
 
 import java.util.Arrays;
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.SET;
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Out;
+
+import edu.princeton.cs.algs4.*;
 
 public class KdTree {
 
+    private Node root; // root of the tree
+
+    // constructing the node
 	private static class Node {
-		private Point2D p; // the point
-		private RectHV rect; // the axis-aligned rectangle corresponding to this node
-		private Node lb; // the left/bottom subtree
-		private Node rt; // the right/top subtree
-		}
-	
+        private Point2D p; // the point
+        private RectHV rect; // the axis-aligned rectangle corresponding to this node
+        private Node left, right; // the left and right/bottom subtree
+        private Node root; // the root of the tree
+        private int size; // the number of nodes
+
+        public Node(Point2D p,  Node left, Node right, RectHV rect) {
+            this.p = p;
+            this.rect = rect;
+            this.left = left;
+            this.right = right;
+            this.size = 1;
+        }
+    }
+
 	public SET<Point2D> pointSet;
+
 	// construct an empty set of points
     public KdTree() {
     	
@@ -27,23 +38,40 @@ public class KdTree {
 
     // is the set empty?
     public boolean isEmpty() {
-        return false;
+        return size() == 0;
     }
 
     // number of points in the set
     public int size() {
-    	return 0;
+        return size(root);
+    }
+
+    // return number of key-value pairs in BST rooted at x
+    private int size(Node x){
+        if(x == null)
+            return 0;
+        else
+            return x.size;
     }
 
     // add the point p to the set (if it is not already in the set)
     public void insert(Point2D p) {
+
     };
+
+    /**
+     * TODO: CREATE PRIVATE HELPER FOR insert()
+     */
 
     // does the set contain the point p?
     public boolean contains(Point2D p) {
     	
         return false;
     }
+
+    /**
+     * TODO: CREATE PRIVATE HELPER FOR contains()
+     */
 
     // draw all of the points to standard draw
     public void draw() {
@@ -53,11 +81,13 @@ public class KdTree {
 
     // all points in the set that are inside the rectangle
     public Iterable<Point2D> range(RectHV rect) {
+
         return null;
     }
 
     // a nearest neighbor in the set to p; null if set is empty
     public Point2D nearest(Point2D p) {
+
         return p;
     }
 
