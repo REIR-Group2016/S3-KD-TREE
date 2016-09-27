@@ -3,7 +3,9 @@ package P3;
 /*************************************************************************
  *************************************************************************/
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import edu.princeton.cs.algs4.*;
 
@@ -12,14 +14,14 @@ public class KdTree {
     private Node root; // root of the tree
 
     // constructing the node
-	private static class Node {
+    private static class Node {
         private Point2D p; // the point
         private RectHV rect; // the axis-aligned rectangle corresponding to this node
         private Node left, right; // the left and right/bottom subtree
         private Node root; // the root of the tree
         private int size; // the number of nodes
 
-        public Node(Point2D p,  Node left, Node right, RectHV rect) {
+        public Node(Point2D p, Node left, Node right, RectHV rect) {
             this.p = p;
             this.rect = rect;
             this.left = left;
@@ -28,12 +30,12 @@ public class KdTree {
         }
     }
 
-	public SET<Point2D> pointSet;
+    public SET<Point2D> pointSet;
 
-	// construct an empty set of points
+    // construct an empty set of points
     public KdTree() {
-    	
-    	pointSet = new SET<Point2D> ();
+
+        pointSet = new SET<Point2D>();
     }
 
     // is the set empty?
@@ -47,8 +49,8 @@ public class KdTree {
     }
 
     // return number of key-value pairs in BST rooted at x
-    private int size(Node x){
-        if(x == null)
+    private int size(Node x) {
+        if (x == null)
             return 0;
         else
             return x.size;
@@ -57,7 +59,7 @@ public class KdTree {
     // add the point p to the set (if it is not already in the set)
     public void insert(Point2D p) {
 
-    };
+    }
 
     /**
      * TODO: CREATE PRIVATE HELPER FOR insert()
@@ -65,7 +67,7 @@ public class KdTree {
 
     // does the set contain the point p?
     public boolean contains(Point2D p) {
-    	
+
         return false;
     }
 
@@ -75,21 +77,78 @@ public class KdTree {
 
     // draw all of the points to standard draw
     public void draw() {
-    	
 
+        //drawHelper();
     }
+
+    private void drawHelper(Node node, Node parent) {
+        if (node == null) return;
+
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+        StdDraw.rectangle(0.5, 0.5, 0.5, 0.5);
+
+        /**
+         * TODO: Implement how to draw the points and the splitting lines
+         */
+    }
+
+    private ArrayList<Point2D> contain = new ArrayList<Point2D>();
 
     // all points in the set that are inside the rectangle
     public Iterable<Point2D> range(RectHV rect) {
-
-        return null;
+        contain.clear();
+        rangeHelper(root, rect);
+        return contain;
     }
 
+
+    private void rangeHelper(Node node, RectHV rect) {
+        if (node == null) return;
+
+        // TO DO: we need to check if the query rectangle does not
+        // intersect the rectangle corresponding to a node, no need to
+        // explore that node (or its subtrees)
+
+        // This implementation traversal all subtrees
+        // and is NOT THE BEST optimization but it works
+        if (rect.contains(node.p)) {
+            contain.add(node.p);
+        }
+        rangeHelper(node.left, rect);
+        rangeHelper(node.right, rect);
+    }
+
+    Point2D closestPoint;
+    Point2D target;
     // a nearest neighbor in the set to p; null if set is empty
     public Point2D nearest(Point2D p) {
 
-        return p;
+        closestPoint = null;
+        target = p;
+
+        nearestHelper(root);
+        return closestPoint;
+
     }
+
+    private void nearestHelper(Node currentNode){
+        if (currentNode == null) return;
+
+        if(closestPoint == null){
+            closestPoint = currentNode.p;
+        }else{
+            if (closestPoint.distanceTo(target) > currentNode.p.distanceTo(target)){
+                closestPoint = currentNode.p;
+            }
+        }
+
+        // Now I have to check the subtrees
+        nearestHelper(currentNode.left);
+        nearestHelper(currentNode.right);
+
+    }
+
 
     /*******************************************************************************
      * Test client
