@@ -12,21 +12,23 @@ import edu.princeton.cs.algs4.*;
 public class KdTree {
 
     private Node root; // root of the tree
+    private static final boolean HORIZONTAL = true;
+    private static final boolean VERTICAL = false;
 
     // constructing the node
     private static class Node {
         private Point2D p; // the point
         private RectHV rect; // the axis-aligned rectangle corresponding to this node
         private Node left, right; // the left and right/bottom subtree
-        private Node root; // the root of the tree
-        private int size; // the number of nodes
+        private int level; // the tree level
 
-        public Node(Point2D p, Node left, Node right, RectHV rect) {
+        public Node(Point2D p, Node left, Node right, RectHV rect, int level) {
             this.p = p;
             this.rect = rect;
             this.left = left;
             this.right = right;
-            this.size = 1;
+            this.level = level;
+
         }
     }
 
@@ -49,21 +51,43 @@ public class KdTree {
     }
 
     // return number of key-value pairs in BST rooted at x
-    private int size(Node x) {
-        if (x == null)
+    private int size(Node node) {
+        if (node == null)
             return 0;
         else
-            return x.size;
+            return size(node);
     }
 
     // add the point p to the set (if it is not already in the set)
     public void insert(Point2D p) {
-
+        root = insertHelper(root, p, HORIZONTAL);
     }
 
-    /**
-     * TODO: CREATE PRIVATE HELPER FOR insert()
-     */
+    private Node insertHelper(Node node, Point2D point, boolean vertical){
+        if (node == null) {
+            return null;
+        }
+
+        /**
+         *Check x and insert
+         * if point to be inserted has a smaller x-coordinate than the point
+         * in the ROOT, go left else go to right.
+         *
+         * Check y and insert
+         * Then at the next level use the y-coordinates
+         * if the point to be inserted has a smaller y-coordinate than the point
+         * in the NODE, got to left else got to right
+         */
+
+        if(node.p.compareTo(point) > 0){
+            node.left = insertHelper(node.left, point, !vertical);
+        }else if(node.p.compareTo(point) < 0){
+            node.right = insertHelper(node.right, point, !vertical);
+        }else{
+            node.p = point;
+        }
+        return node;
+    }
 
     // does the set contain the point p?
     public boolean contains(Point2D p) {
@@ -78,7 +102,7 @@ public class KdTree {
     // draw all of the points to standard draw
     public void draw() {
 
-        //drawHelper();
+        drawHelper(root, null);
     }
 
     private void drawHelper(Node node, Node parent) {
@@ -87,6 +111,7 @@ public class KdTree {
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
         StdDraw.rectangle(0.5, 0.5, 0.5, 0.5);
+        node.p.draw();
 
         /**
          * TODO: Implement how to draw the points and the splitting lines
@@ -111,7 +136,7 @@ public class KdTree {
         // explore that node (or its subtrees)
 
         // This implementation traversal all subtrees
-        // and is NOT THE BEST optimization but it works
+        // and is NOT THE BEST optimization
         if (rect.contains(node.p)) {
             contain.add(node.p);
         }
@@ -143,7 +168,8 @@ public class KdTree {
             }
         }
 
-        // Now I have to check the subtrees
+        // Now we need to check the subtrees
+        // This is not finished
         nearestHelper(currentNode.left);
         nearestHelper(currentNode.right);
 
