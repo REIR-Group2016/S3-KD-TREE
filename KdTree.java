@@ -3,18 +3,15 @@ package P3;
 /*************************************************************************
  *************************************************************************/
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.RectHV;
+
+import java.util.ArrayList;
 
 public class KdTree {
 
     private int size = 0; // Grimur: size of tree value
-	private Node root; // root of the tree
-    private static final boolean HORIZONTAL = true;
-    private static final boolean VERTICAL = false;
+    private Node root; // root of the trees
 
     // constructing the node
     private static class Node {
@@ -53,129 +50,93 @@ public class KdTree {
 
     // return number of key-value pairs in BST rooted at x
     // Grimur: See nothing about needing that as opposed to just for the tree as test main function shows?
-    private int size(Node node) 
-    {
+    private int size(Node node) {
         int returnSize = size;
-        
+
         return returnSize;
     }
 
-    // add the point p to the set (if it is not already in the set)
+    /*******************************************************************************
+     * Insert - add the point p to the set (if it is not already in the set)
+     ******************************************************************************/
+
     public void insert(Point2D p) {
         root = insertHelper(root, p, true);
     }
 
-    private Node insertHelper(Node node, Point2D point, boolean vertical)
-    {
-        if (node == null) 
-        {
+    private Node insertHelper(Node node, Point2D point, boolean vertical) {
+        if (node == null) {
             RectHV newRect = new RectHV(0.0, 0.0, 1.0, 1.0);
-        	
-        	Node newNode = new Node(point, null, null, newRect, !vertical);
-        	size++;
-        	
-        	return newNode;
-        }
-        
-        if (node.p.x() == point.x() && node.p.y() == point.y())
-        {
-        	return node;
+
+            Node newNode = new Node(point, null, null, newRect, !vertical);
+            size++;
+
+            return newNode;
         }
 
-        /**
-         *Check x and insert
-         * if point to be inserted has a smaller x-coordinate than the point
-         * in the ROOT, go left else go to right.
-         *
-         * Check y and insert
-         * Then at the next level use the y-coordinates
-         * if the point to be inserted has a smaller y-coordinate than the point
-         * in the NODE, got to left else got to right
-         */
-        
+        if (node.p.x() == point.x() && node.p.y() == point.y()) {
+            return node;
+        }
         // Grimur: Need to compare y values when vertical is true
 
-        if(vertical)
-        {
-            if(node.p.x() > point.x())
-            {
-            	node.right = insertHelper(node.right, point, !vertical);
+        if (vertical) {
+            if (node.p.x() > point.x()) {
+                node.left = insertHelper(node.left, point, false);
+            } else {
+                node.right = insertHelper(node.right, point, false);
             }
-            else
-            {
-            	node.left = insertHelper(node.left, point, !vertical);
-            } 
-        }
-        
-        else if(!vertical)
-        {
-            if(node.p.y() > point.y())
-            {
-            	node.right = insertHelper(node.right, point, vertical);
+        } else {
+            if (node.p.y() > point.y()) {
+                node.left = insertHelper(node.left, point, true);
+            } else {
+                node.right = insertHelper(node.right, point, true);
             }
-            else
-            {
-            	node.left = insertHelper(node.left, point, vertical);
-            } 
         }
         return node;
     }
 
-    // does the set contain the point p?
+    /*******************************************************************************
+     * Contains - does the set contain the point p?
+     ******************************************************************************/
+
     //Grimur: Made it void and added helper, making helper determine the outcome
-    public boolean contains(Point2D p) 
-    { 	
-    	return containsHelper(root, p, true);
+    public boolean contains(Point2D p) {
+        return containsHelper(root, p, true);
     }
 
-    /**
-     * TODO: CREATE PRIVATE HELPER FOR contains()
-     */
-    
-    private boolean containsHelper (Node node, Point2D point, boolean vertical)
-    {
-    	if (node == null)
-    	{
-    		return false;
-    	}
-    	
-    	if(node.p.x() == point.x() && node.p.y() == point.y())
-    	{
-    		return true;
-    	}
-    	
-    	if(vertical)
-        {
-            if(node.p.x() > point.x())
-            {
-            	return containsHelper(node.right, point, !vertical);
-            }
-            else
-            {
-            	 return containsHelper(node.left, point, !vertical);
-            } 
+    private boolean containsHelper(Node node, Point2D point, boolean vertical) {
+        if (node == null) {
+            return false;
         }
-        else
-        {
-            if(node.p.y() > point.y())
-            {
-            	return containsHelper(node.right, point, vertical);
+
+        if (node.p.x() == point.x() && node.p.y() == point.y()) {
+            return true;
+        }
+
+        if (vertical) {
+            if (node.p.x() > point.x()) {
+                return containsHelper(node.left, point, false);
+            } else {
+                return containsHelper(node.right, point, false);
             }
-            else
-            {
-            	return containsHelper(node.left, point, vertical);
-            } 
+        } else {
+            if (node.p.y() > point.y()) {
+                return containsHelper(node.left, point, true);
+            } else {
+                return containsHelper(node.right, point, true);
+            }
         }
     }
 
-    // draw all of the points to standard draw
-    public void draw() 
-    {
+    /*******************************************************************************
+     * Draw - draw all of the points to standard draw
+     ******************************************************************************/
+
+    public void draw() {
         drawHelper(root, null);
     }
 
-    private void drawHelper(Node node, Node parent) 
-    {
+    private void drawHelper(Node node, Node parent) {
         if (node == null) return;
 
         StdDraw.setPenColor(StdDraw.BLACK);
@@ -188,61 +149,95 @@ public class KdTree {
          */
     }
 
+    /*******************************************************************************
+     * Range - all points in the set that are inside the rectangle
+     * Mooshak #1248
+     ******************************************************************************/
+
     private ArrayList<Point2D> contain = new ArrayList<Point2D>();
 
-    // all points in the set that are inside the rectangle
     public Iterable<Point2D> range(RectHV rect) {
         contain.clear();
-        rangeHelper(root, rect);
+        rangeHelper(root, rect, true);
         return contain;
     }
 
+    private void rangeHelper(Node node, RectHV rect, boolean vertical) {
+        if (node == null)
+            return;
 
-    private void rangeHelper(Node node, RectHV rect) {
-        if (node == null) return;
+        if (vertical) {
+            // Check the x-coordinate
+            if (node.p.x() > rect.xmax()) {
+                rangeHelper(node.left, rect, false);
 
-        // TO DO: we need to check if the query rectangle does not
-        // intersect the rectangle corresponding to a node, no need to
-        // explore that node (or its subtrees)
+            } else if (node.p.x() < rect.xmin()) {
+                rangeHelper(node.right, rect, false);
 
-        // This implementation traversal all subtrees
-        // and is NOT THE BEST optimization
-        if (rect.contains(node.p)) {
-            contain.add(node.p);
+            } else {
+                if (rect.contains(node.p)) {
+                    contain.add(node.p);
+                }
+                rangeHelper(node.left, rect, false);
+                rangeHelper(node.right, rect, false);
+            }
+
+        } else {
+            // Check the y-coordinate
+            if (node.p.y() > rect.ymax()) {
+                rangeHelper(node.left, rect, true);
+            } else if (node.p.y() < rect.ymin()) {
+                rangeHelper(node.right, rect, true);
+
+            } else {
+                if (rect.contains(node.p)) {
+                    contain.add(node.p);
+                }
+
+                rangeHelper(node.left, rect, true);
+                rangeHelper(node.right, rect, true);
+            }
         }
-        rangeHelper(node.left, rect);
-        rangeHelper(node.right, rect);
     }
+
+    /*******************************************************************************
+     * Nearest - a nearest neighbor in the set to p; null if set is empty
+     ******************************************************************************/
 
     Point2D closestPoint;
     Point2D target;
-    // a nearest neighbor in the set to p; null if set is empty
-    public Point2D nearest(Point2D p) {
 
+    public Point2D nearest(Point2D p) {
         closestPoint = null;
         target = p;
-
-        nearestHelper(root);
+        nearestHelper(root, true);
         return closestPoint;
-
     }
 
-    private void nearestHelper(Node currentNode){
+    private void nearestHelper(Node currentNode, boolean vertical) {
         if (currentNode == null) return;
 
-        if(closestPoint == null){
+        if (closestPoint == null) {
             closestPoint = currentNode.p;
-        }else{
-            if (closestPoint.distanceTo(target) > currentNode.p.distanceTo(target)){
+        } else {
+            if (closestPoint.distanceTo(target) > currentNode.p.distanceTo(target)) {
                 closestPoint = currentNode.p;
             }
         }
 
-        // Now we need to check the subtrees
-        // This is not finished
-        nearestHelper(currentNode.left);
-        nearestHelper(currentNode.right);
-
+        if (vertical) {
+            if (currentNode.p.x() > target.x()) {
+                nearestHelper(currentNode.left, false);
+            } else {
+                nearestHelper(currentNode.right, false);
+            }
+        } else {
+            if (currentNode.p.y() > target.y()) {
+                nearestHelper(currentNode.left, true);
+            } else {
+                nearestHelper(currentNode.right, true);
+            }
+        }
     }
 
 
@@ -254,7 +249,7 @@ public class KdTree {
         Out out = new Out();
         int N = in.readInt(), C = in.readInt(), T = 20;
         KdTree tree = new KdTree();
-        Point2D [] points = new Point2D[C];
+        Point2D[] points = new Point2D[C];
         out.printf("Inserting %d points into tree\n", N);
         for (int i = 0; i < N; i++) {
             tree.insert(new Point2D(in.readDouble(), in.readDouble()));
