@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.*;
 import edu.princeton.cs.algs4.RectHV;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class KdTree {
 
@@ -133,20 +134,28 @@ public class KdTree {
      ******************************************************************************/
 
     public void draw() {
-        drawHelper(root, null);
+        drawHelper(root);
     }
 
-    private void drawHelper(Node node, Node parent) {
+    private void drawHelper(Node node) {
         if (node == null) return;
 
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
-        StdDraw.rectangle(0.5, 0.5, 0.5, 0.5);
         node.p.draw();
 
-        /**
-         * TODO: Implement how to draw the points and the splitting lines
-         */
+        double x = node.p.x();
+        double y = node.p.y();
+
+        if (node.vertical == true) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.line(x, node.rect.ymin(), x, node.rect.ymax());
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.line(node.rect.xmin(), y, node.rect.xmax(), y);
+        }
+        drawHelper(node.left);
+        drawHelper(node.right);
     }
 
     /*******************************************************************************
@@ -232,11 +241,11 @@ public class KdTree {
      * Test client
      ******************************************************************************/
     public static void main(String[] args) {
-    	In in = new In();
+        In in = new In();
         Out out = new Out();
         int N = in.readInt(), C = in.readInt(), T = 20;
         KdTree tree = new KdTree();
-        Point2D [] points = new Point2D[C];
+        Point2D[] points = new Point2D[C];
         out.printf("Inserting %d points into tree\n", N);
         for (int i = 0; i < N; i++) {
             tree.insert(new Point2D(in.readDouble(), in.readDouble()));
@@ -252,5 +261,7 @@ public class KdTree {
                 tree.contains(points[j]);
             }
         }
+    }
 }
+
 
