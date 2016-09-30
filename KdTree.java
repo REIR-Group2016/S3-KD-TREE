@@ -193,7 +193,6 @@ public class KdTree {
                 if (rect.contains(node.p)) {
                     contain.add(node.p);
                 }
-
                 rangeHelper(node.left, rect, true);
                 rangeHelper(node.right, rect, true);
             }
@@ -202,6 +201,7 @@ public class KdTree {
 
     /*******************************************************************************
      * Nearest - a nearest neighbor in the set to p; null if set is empty
+     * Mooshak # 1284
      ******************************************************************************/
 
     Point2D closestPoint;
@@ -210,11 +210,11 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         closestPoint = null;
         target = p;
-        nearestHelper(root, true);
+        nearestHelper(root);
         return closestPoint;
     }
 
-    private void nearestHelper(Node currentNode, boolean vertical) {
+    private void nearestHelper(Node currentNode) {
         if (currentNode == null) return;
 
         if (closestPoint == null) {
@@ -224,22 +224,9 @@ public class KdTree {
                 closestPoint = currentNode.p;
             }
         }
-
-        if (vertical) {
-            if (currentNode.p.x() > target.x()) {
-                nearestHelper(currentNode.left, false);
-            } else {
-                nearestHelper(currentNode.right, false);
-            }
-        } else {
-            if (currentNode.p.y() > target.y()) {
-                nearestHelper(currentNode.left, true);
-            } else {
-                nearestHelper(currentNode.right, true);
-            }
-        }
+        nearestHelper(currentNode.left);
+        nearestHelper(currentNode.right);
     }
-
 
     /*******************************************************************************
      * Test client
