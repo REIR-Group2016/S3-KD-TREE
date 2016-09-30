@@ -4,11 +4,11 @@
 **********************************************************************/
 
 Name:    Grímur Garpsson
-Login:   grimur 14
+Login:   grimur 14@ru.is
 Section instructor: 
 
-Partner name:     
-Partner login:    
+Partner name:     Raquelita Rós Aguilar
+Partner login:    raquelita15@ru.is
 Partner section instructor:
 
 /**********************************************************************
@@ -16,16 +16,31 @@ Partner section instructor:
  *  2d-tree data structure.
  **********************************************************************/
 
+A simple helper class that included: size, root node, left and right pointers as well as a boolean value for veritcal or not.
+It had a constructor in it so a newly made node would have all the values it was created with and its posiiton in the tree all
+in the right place.
+
 /**********************************************************************
  *  Describe your method for range search in a kd-tree.
  **********************************************************************/
 
+Made a private helper method as is appropriate for data security. In said helper class we had several special cases:
+If the input node is null, if the input node is vertical and if its not. 
+
+If its vertical the method compares x-coordinates to see if they go outside the min or max. If it isn't vertical the method compares
+y-coordinates to see if they are outside of min or max.
+
+This is done each time as the function recursively calls itself and searches. If the node is null then it stops.
 
 /**********************************************************************
  *  Describe your method for nearest neighbor search in a kd-tree.
  **********************************************************************/
 
+Made a private helper method as is appropriate for data security. In said helper class we had several special cases:
+If the current node is null, if the closest point is null and if the closest point is closer to the target than the current point.
 
+The last special case updates which is nearest while the other two special cases are to end the recursive tree search implemented in
+this method.
 
 /**********************************************************************
  *  Give the total memory usage in bytes (using tilde notation and 
@@ -39,9 +54,9 @@ Partner section instructor:
 
 bytes per Point2D: 32 bytes
 
-bytes per RectHV:
+bytes per RectHV: 256 bytes
 
-bytes per KdTree of N points (using tilde notation):   ~
+bytes per KdTree of N points (using tilde notation):   ~352N
 [include the memory for any referenced Node, Point2D and RectHV objects]
 
 
@@ -53,6 +68,11 @@ bytes per KdTree of N points (using tilde notation):   ~
  *  points or to read them in from standard input.)
  **********************************************************************/
 
+Insert 1000	0,02 sec
+Insert 10k	0,21 sec
+Insert 100k	2,01 sec
+
+~N
 
 /**********************************************************************
  *  How many nearest neighbor calculations can your brute-force
@@ -67,10 +87,8 @@ bytes per KdTree of N points (using tilde notation):   ~
 
                      calls to nearest() per second
                      brute force           2d-tree
-input100K.txt
-input1M.txt
-
-
+input100K.txt				593,68 per second (168,44 sec runtime, 100k/168,44 = 593,68)
+input1M.txt				590,23 per second (1694,25 sec runtime, 1M/1694,25 = 590,23)
 
 /**********************************************************************
  *  Known bugs / limitations.
@@ -89,6 +107,7 @@ input1M.txt
  *  Describe any serious problems you encountered.                    
  **********************************************************************/
 
+It took us a lot longer to get our time testing to work as it should then we anticipated.
 
 /**********************************************************************
  *  If you worked with a partner, assert below that you followed
@@ -96,9 +115,9 @@ input1M.txt
  *  sentence explaining what each of you contributed.
  **********************************************************************/
 
+I contributes all of PointSET as well as the insert and contains methods of KdTree and wrote the readme and tested the runtimes.
 
-
-
+My partner contributed the rest.
 
 
 /**********************************************************************

@@ -232,11 +232,11 @@ public class KdTree {
      * Test client
      ******************************************************************************/
     public static void main(String[] args) {
-        In in = new In();
+    	In in = new In();
         Out out = new Out();
         int N = in.readInt(), C = in.readInt(), T = 20;
         KdTree tree = new KdTree();
-        Point2D[] points = new Point2D[C];
+        Point2D [] points = new Point2D[C];
         out.printf("Inserting %d points into tree\n", N);
         for (int i = 0; i < N; i++) {
             tree.insert(new Point2D(in.readDouble(), in.readDouble()));
@@ -252,6 +252,5 @@ public class KdTree {
                 tree.contains(points[j]);
             }
         }
-    }
 }
 
