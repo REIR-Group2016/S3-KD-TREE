@@ -3,13 +3,15 @@
  *  Kd-tree
 **********************************************************************/
 
-Name:    Grímur Garpsson
+Name:    Grimur Garpsson
 Login:   grimur 14@ru.is
 Section instructor: 
+GuÃ°mundur Bjarni Kristinsson
 
-Partner name:     Raquelita Rós Aguilar
+Partner name:     Raquelita Ros Aguilar
 Partner login:    raquelita15@ru.is
 Partner section instructor:
+HMV
 
 /**********************************************************************
  *  Describe the Node data type you used to implement the
@@ -24,7 +26,7 @@ in the right place.
  *  Describe your method for range search in a kd-tree.
  **********************************************************************/
 
-Made a private helper method as is appropriate for data security. In said helper class we had several special cases:
+A private helper method was created as is appropriate for data security. In said helper method we had several special cases:
 If the input node is null, if the input node is vertical and if its not. 
 
 If its vertical the method compares x-coordinates to see if they go outside the min or max. If it isn't vertical the method compares
@@ -36,7 +38,7 @@ This is done each time as the function recursively calls itself and searches. If
  *  Describe your method for nearest neighbor search in a kd-tree.
  **********************************************************************/
 
-Made a private helper method as is appropriate for data security. In said helper class we had several special cases:
+A private helper method was created as is appropriate for data security. In said helper method we had several special cases:
 If the current node is null, if the closest point is null and if the closest point is closer to the target than the current point.
 
 The last special case updates which is nearest while the other two special cases are to end the recursive tree search implemented in
@@ -87,8 +89,10 @@ Insert 100k	2,01 sec
 
                      calls to nearest() per second
                      brute force           2d-tree
-input100K.txt				593,68 per second (168,44 sec runtime, 100k/168,44 = 593,68)
-input1M.txt				590,23 per second (1694,25 sec runtime, 1M/1694,25 = 590,23)
+
+
+input100K.txt		593,68 per second (168,44 sec runtime, 100k/168,44 = 593,68)
+input1M.txt			590,23 per second (1694,25 sec runtime, 1M/1694,25 = 590,23)
 
 /**********************************************************************
  *  Known bugs / limitations.
@@ -97,11 +101,13 @@ input1M.txt				590,23 per second (1694,25 sec runtime, 1M/1694,25 = 590,23)
 
 /**********************************************************************
  *  Describe whatever help (if any) that you received.
- *  Don't include readings, lectures, and dæmatímar, but do
+ *  Don't include readings, lectures, and dï¿½matï¿½mar, but do
  *  include any help from people (including course staff, 
  *  classmates, and friends) and attribute them by name.
  **********************************************************************/
 
+Raquelita discussed the project description with a friend, Mr. Cabrera,
+that helped her understand this algorithm better. 
 
 /**********************************************************************
  *  Describe any serious problems you encountered.                    
