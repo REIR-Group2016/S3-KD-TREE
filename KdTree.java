@@ -5,9 +5,7 @@ package P3;
 
 import edu.princeton.cs.algs4.*;
 import edu.princeton.cs.algs4.RectHV;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class KdTree {
 
@@ -27,7 +25,6 @@ public class KdTree {
             this.left = left;
             this.right = right;
             this.vertical = vertical;
-
         }
     }
 
